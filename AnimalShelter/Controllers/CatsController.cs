@@ -17,20 +17,33 @@ namespace AnimalShelter.Controllers
       _db = db;
     }
 
-    // GET api/cats
+    // GET api/Cats
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Cat>>> Get()
     {
       return await _db.Cats.ToListAsync();
     }
 
-    // POST api/cats
+    // POST api/Cats
     [HttpPost]
     public async Task<ActionResult<Cat>> Post(Cat cat)
     {
       _db.Cats.Add(cat);
       await _db.SaveChangesAsync();
       return CreatedAtAction("Post", new { id = cat.CatId }, cat);
+    }
+    
+    // GET: api/Cats/5
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Cat>> GetCat(int id)
+    {
+      var cat = await _db.Cats.FindAsync(id);
+
+      if (cat == null)
+      {
+        return NotFound();
+      }
+      return cat;
     }
   }
 }
