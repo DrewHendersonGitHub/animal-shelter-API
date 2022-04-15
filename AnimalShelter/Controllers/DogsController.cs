@@ -20,9 +20,41 @@ namespace AnimalShelter.Controllers
 
     // GET api/Dogs
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Dog>>> Get()
+    public async Task<ActionResult<IEnumerable<Dog>>> Get(int dogId, string name, string breed, int minAge, int maxAge, string gender)
     {
-      return await _db.Dogs.ToListAsync();
+      var query = _db.Dogs.AsQueryable();
+
+      if (dogId != 0)
+      {
+        query = query.Where(e => e.DogId == dogId);
+      }
+
+      if (name != null)
+      {
+        query = query.Where(e => e.Name == name);
+      }
+
+      if (breed != null)
+      {
+        query = query.Where(e => e.Breed == breed);
+      }
+
+      if (minAge > 0)
+      {
+        query = query.Where(e => e.Age >= minAge);
+      }
+
+      if (maxAge != 0)
+      {
+        query = query.Where(e => e.Age <= maxAge);
+      }
+
+      if (gender != null)
+      {
+        query = query.Where(e => e.Gender == gender);
+      }
+
+      return await query.ToListAsync();
     }
 
     // POST api/Dogs
