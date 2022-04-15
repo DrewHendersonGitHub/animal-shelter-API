@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -56,15 +57,6 @@ namespace AnimalShelter.Controllers
 
       return await query.ToListAsync();
     }
-
-    // POST api/Dogs
-    [HttpPost]
-    public async Task<ActionResult<Dog>> Post(Dog dog)
-    {
-      _db.Dogs.Add(dog);
-      await _db.SaveChangesAsync();
-      return CreatedAtAction("Post", new { id = dog.DogId }, dog);
-    }
     
     // GET: api/Dogs/5
     [HttpGet("{id}")]
@@ -77,6 +69,50 @@ namespace AnimalShelter.Controllers
         return NotFound();
       }
       return dog;
+    }
+    
+    // GET: api/Dogs/Random
+    [HttpGet]
+    [Route("Random")]
+    public async Task<ActionResult<IEnumerable<Dog>>> Random(int amount)
+    {
+      var query = _db.Dogs.AsQueryable();
+      if (amount > query.Count())
+      {
+        amount = query.Count();
+      }
+      int first = query.OrderBy(d => d.DogId).FirstOrDefault().DogId;
+      int last = query.OrderBy(d => d.DogId).LastOrDefault().DogId;
+      List<int> dogList = new List<int>();
+      while (amount > 0)
+      {
+        Random random = new Random();
+        int r = 0;
+        while (!query.Any(d => d.DogId == r))
+        {
+          r = random.Next(first, (last + 1));
+          if (!dogList.Contains(r))
+          {
+            dogList.Add(r);
+          }
+          else
+          {
+            r = 0;
+          }
+        }
+        amount--;
+      }
+      query = query.Where(d => dogList.Contains(d.DogId));
+      return await query.ToListAsync();
+    }
+
+    // POST api/Dogs
+    [HttpPost]
+    public async Task<ActionResult<Dog>> Post(Dog dog)
+    {
+      _db.Dogs.Add(dog);
+      await _db.SaveChangesAsync();
+      return CreatedAtAction("Post", new { id = dog.DogId }, dog);
     }
     
     // PUT: api/Dogs/5

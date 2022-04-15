@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -57,15 +58,6 @@ namespace AnimalShelter.Controllers
       return await query.ToListAsync();
     }
 
-    // POST api/Cats
-    [HttpPost]
-    public async Task<ActionResult<Cat>> Post(Cat cat)
-    {
-      _db.Cats.Add(cat);
-      await _db.SaveChangesAsync();
-      return CreatedAtAction("Post", new { id = cat.CatId }, cat);
-    }
-    
     // GET: api/Cats/5
     [HttpGet("{id}")]
     public async Task<ActionResult<Cat>> GetCat(int id)
@@ -77,6 +69,50 @@ namespace AnimalShelter.Controllers
         return NotFound();
       }
       return cat;
+    }
+    
+    // GET: api/Cats/Random
+    [HttpGet]
+    [Route("Random")]
+    public async Task<ActionResult<IEnumerable<Cat>>> Random(int amount)
+    {
+      var query = _db.Cats.AsQueryable();
+      if (amount > query.Count())
+      {
+        amount = query.Count();
+      }
+      int first = query.OrderBy(e => e.CatId).FirstOrDefault().CatId;
+      int last = query.OrderBy(e => e.CatId).LastOrDefault().CatId;
+      List<int> catList = new List<int>();
+      while (amount > 0)
+      {
+        Random random = new Random();
+        int r = 0;
+        while (!query.Any(c => c.CatId == r))
+        {
+          r = random.Next(first, (last + 1));
+          if (!catList.Contains(r))
+          {
+            catList.Add(r);
+          }
+          else
+          {
+            r = 0;
+          }
+        }
+        amount--;
+      }
+      query = query.Where(entry => catList.Contains(entry.CatId));
+      return await query.ToListAsync();
+    }
+
+    // POST api/Cats
+    [HttpPost]
+    public async Task<ActionResult<Cat>> Post(Cat cat)
+    {
+      _db.Cats.Add(cat);
+      await _db.SaveChangesAsync();
+      return CreatedAtAction("Post", new { id = cat.CatId }, cat);
     }
     
     // PUT: api/Cats/5
