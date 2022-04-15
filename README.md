@@ -41,7 +41,7 @@ _Request Body:_
 >* _catId - int - The id of the cat._
 >* _name - string, required, max length 50 - The name of the cat._
 >* _breed - string, required, max length 50 - The breed of the cat._
->* _age - int, max length 50 - The age of the cat._
+>* _age - int, max value 50 - The age of the cat._
 >* _gender - string, required - The gender of the cat, either m or f._
 
 _PUT ```/api/Cats/{id}``` - Used for updating an existing cat's data._
@@ -53,7 +53,7 @@ _Request Body:_
 >* _catId - int - The id of the cat._
 >* _name - string, required, max length 50 - The name of the cat._
 >* _breed - string, required, max length 50 - The breed of the cat._
->* _age - int, max length 50 - The age of the cat._
+>* _age - int, max value 50 - The age of the cat._
 >* _gender - string, required - The gender of the cat, either m or f._
 
 _DELETE ```/api/Cats/{id}``` - Used for removing a cat._
@@ -68,7 +68,7 @@ _This API doesn't store any real world animals in it, just some names I made up.
 
 * _Make sure you have [.NET 5 SDK](https://www.learnhowtoprogram.com/c-and-net/getting-started-with-c/installing-c-and-net) and [MySQL Workbench](https://dev.mysql.com/downloads/mysql/) installed._
 * _Install dotnet-ef if you haven't yet with ```dotnet tool install --global dotnet-ef```._
-* _Download or clone ```https://github.com/DrewHendersonGitHub/Pierre-s-Sweet-and-Savory-Treats``` to your computer._
+* _Download or clone ```https://github.com/DrewHendersonGitHub/animal-shelter-API``` to your computer._
 * _In a terminal inside directory ```Bakery```, make a new file ```appsettings.json```._
 * _Add the following code with ```{DATABASE}```, ```{USERNAME}```, and ```{PASSWORD}``` replaced with your choice._
 ```
