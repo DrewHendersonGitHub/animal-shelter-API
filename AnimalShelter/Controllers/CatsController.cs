@@ -50,7 +50,7 @@ namespace AnimalShelter.Controllers
         query = query.Where(e => e.Age <= maxAge);
       }
 
-      if (gender != null)
+      if (gender == "m" || gender == "f")
       {
         query = query.Where(e => e.Gender == gender);
       }
@@ -84,7 +84,7 @@ namespace AnimalShelter.Controllers
       int first = query.OrderBy(e => e.CatId).FirstOrDefault().CatId;
       int last = query.OrderBy(e => e.CatId).LastOrDefault().CatId;
       List<int> catList = new List<int>();
-      while (amount > 0)
+      do
       {
         Random random = new Random();
         int r = 0;
@@ -101,7 +101,7 @@ namespace AnimalShelter.Controllers
           }
         }
         amount--;
-      }
+      } while (amount > 0);
       query = query.Where(entry => catList.Contains(entry.CatId));
       return await query.ToListAsync();
     }
